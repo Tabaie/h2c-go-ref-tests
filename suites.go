@@ -34,6 +34,9 @@ const (
 	BLS12381G1_XMDSHA256_SSWU_RO_   SuiteID = "BLS12381G1_XMD:SHA-256_SSWU_RO_"
 	BLS12381G2_XMDSHA256_SSWU_NU_   SuiteID = "BLS12381G2_XMD:SHA-256_SSWU_NU_"
 	BLS12381G2_XMDSHA256_SSWU_RO_   SuiteID = "BLS12381G2_XMD:SHA-256_SSWU_RO_"
+
+	BN254G1_XMDSHA256_SW_NU_ SuiteID = "BN254G1_XMD:SHA-256_SVDW_NU_"
+	BN254G1_XMDSHA256_SW_RO_ SuiteID = "BN254G1_XMD:SHA-256_SVDW_RO_"
 )
 
 // Get returns a HashToPoint based on the SuiteID, otherwise returns an error
@@ -106,4 +109,7 @@ func init() {
 	BLS12381G1_XMDSHA256_SSWU_RO_.register(&params{E: C.BLS12381G1, K: 128, Exp: sha256, Map: M.MapDescriptor{ID: M.SSWU, Z: 11, Iso: C.GetBLS12381G1Isogeny}, L: 64, RO: true})
 	BLS12381G2_XMDSHA256_SSWU_NU_.register(&params{E: C.BLS12381G2, K: 128, Exp: sha256, Map: M.MapDescriptor{ID: M.SSWU, Z: []interface{}{-2, -1}, Iso: C.GetBLS12381G2Isogeny}, L: 64, RO: false})
 	BLS12381G2_XMDSHA256_SSWU_RO_.register(&params{E: C.BLS12381G2, K: 128, Exp: sha256, Map: M.MapDescriptor{ID: M.SSWU, Z: []interface{}{-2, -1}, Iso: C.GetBLS12381G2Isogeny}, L: 64, RO: true})
+
+	BN254G1_XMDSHA256_SW_NU_.register(&params{E: C.BN254G1, Exp: sha256, Map: M.MapDescriptor{ID: M.SVDW}, L: 48, RO: false})
+	BN254G1_XMDSHA256_SW_RO_.register(&params{E: C.BN254G1, Exp: sha256, Map: M.MapDescriptor{ID: M.SVDW}, L: 48, RO: true})
 }

@@ -23,6 +23,9 @@ const (
 	BLS12381G1_11ISO ID = "BLS12381G1_11ISO"
 	BLS12381G2       ID = "BLS12381G2"
 	BLS12381G2_3ISO  ID = "BLS12381G2_3ISO"
+
+	BN254G1 ID = "BN254G1"
+	BN254G2 ID = "BN254G2"
 )
 
 // Get returns a specific instance of an elliptic curve.
@@ -119,6 +122,16 @@ func (id ID) Get() C.EllCurve {
 			f.Elt([]interface{}{1012, 1012}),
 			str2bigInt("0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab"),
 			str2bigInt("0xbc69f08f2ee75b3584c6a0ea91b352888e2a8e9145ad7689986ff031508ffe1329c2f178731db956d82bf015d1212b02ec0ec69d7477c1ae954cbc06689f6a359894c0adebbf6b4e8020005aaa95551"))
+
+		//From https://docs.rs/ark-bn254/latest/ark_bn254/
+	case BN254G1:
+		f := GF.BN254G1.Get()
+		return C.Weierstrass.New(string(id), f,
+			f.Elt("0"),
+			f.Elt("3"),
+			str2bigInt("21888242871839275222246405745257275088548364400416034343698204186575808495617"), //R is the order of the subgroup
+			str2bigInt("1"))
+
 	default:
 		panic("curve not supported")
 	}
