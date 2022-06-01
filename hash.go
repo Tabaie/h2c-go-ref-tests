@@ -21,6 +21,9 @@ type HashToPoint interface {
 	GetCurve() C.EllCurve
 	// GetHashToScalar returns a hash function that hashes strings to field elements.
 	GetHashToScalar() HashToScalar
+
+	U(in []byte) []GF.Elt
+	Q(u []GF.Elt) []C.Point
 }
 
 // HashToScalar allows to hash string into the field of scalars used for scalar multiplication.
@@ -94,6 +97,13 @@ func (s *encodeToCurve) Hash(in []byte) C.Point {
 	return P
 }
 
+func (s *encodeToCurve) U(in []byte) []GF.Elt {
+	return s.Field.hashToField(in,1)
+}
+func (s *encodeToCurve) Q(u []GF.Elt) []C.Point {
+	return []C.Point{s.Mapping.Map(u[0])}
+}
+
 type hashToCurve struct{ *encoding }
 
 func (s *hashToCurve) IsRandomOracle() bool { return true }
@@ -104,4 +114,14 @@ func (s *hashToCurve) Hash(in []byte) C.Point {
 	R := s.E.Add(Q0, Q1)
 	P := s.E.ClearCofactor(R)
 	return P
+}
+
+func (s *hashToCurve) U(in []byte) []GF.Elt {
+	return s.Field.hashToField(in,2)
+}
+func (s *hashToCurve) Q(u []GF.Elt) []C.Point {
+	Q := make([]C.Point, 2)
+	Q[0] = s.Mapping.Map(u[0])
+	Q[1] = s.Mapping.Map(u[1])
+	return Q
 }

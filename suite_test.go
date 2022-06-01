@@ -57,19 +57,24 @@ func (v vectorSuite) test(t *testing.T) {
 	}
 	hashToScalar := hashToCurve.GetHashToScalar()
 	E := hashToCurve.GetCurve()
-	F := E.Field()
 	maxScalar := hashToScalar.GetScalarField().Order()
 	for i := range v.Vectors {
+
+		vec := v.Vectors[i]
+
 		var x, y []interface{}
-		for _, xi := range strings.Split(v.Vectors[i].P.X, ",") {
+		for _, xi := range strings.Split(vec.P.X, ",") {
 			x = append(x, xi)
 		}
-		for _, yi := range strings.Split(v.Vectors[i].P.Y, ",") {
+		for _, yi := range strings.Split(vec.P.Y, ",") {
 			y = append(y, yi)
 		}
 
-		got := hashToCurve.Hash([]byte(v.Vectors[i].Msg))
-		want := E.NewPoint(F.Elt(x), F.Elt(y))
+		got := hashToCurve.Hash([]byte(vec.Msg))
+		want :=
+			//E.Double(got)
+		E.NewPoint(E.Field().Elt(x), E.Field().Elt(y))
+
 		if !got.IsEqual(want) {
 			t.Fatalf("suite: %v\ngot:  %v\nwant: %v", v.SuiteID, got, want)
 		}
@@ -85,6 +90,7 @@ func (v vectorSuite) test(t *testing.T) {
 func TestVectors(t *testing.T) {
 	if errFolder := filepath.Walk("testdata/suites",
 		func(path string, info os.FileInfo, err error) error {
+
 			if err != nil {
 				return err
 			}
